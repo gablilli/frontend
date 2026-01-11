@@ -1,5 +1,4 @@
 import { Box, IconButton, Skeleton, Tab, Tabs, Typography } from "@mui/material";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FileResponse } from "../../../api/explorer.ts";
 import { closeShareReadme, closeSidebar } from "../../../redux/globalStateSlice.ts";
