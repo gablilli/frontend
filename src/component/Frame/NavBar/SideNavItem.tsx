@@ -5,20 +5,25 @@ import { NoWrapTypography } from "../../Common/StyledComponents.tsx";
 const StyledButtonBase = styled(ButtonBase)<{
   active?: boolean;
 }>(({ theme, active }) => ({
-  borderRadius: "90px",
+  borderRadius: "20px",
   display: "flex",
   justifyContent: "left",
-  alignItems: "initial",
+  alignItems: "center",
   width: "100%",
   backgroundColor: active
     ? `${
         theme.palette.mode == "light"
-          ? lighten(theme.palette.primary.main, 0.7)
-          : darken(theme.palette.primary.main, 0.7)
+          ? lighten(theme.palette.primary.main, 0.75)
+          : darken(theme.palette.primary.main, 0.6)
       }!important`
     : "initial",
+  color: active
+    ? theme.palette.mode == "light"
+      ? darken(theme.palette.primary.main, 0.2)
+      : lighten(theme.palette.primary.main, 0.3)
+    : theme.palette.text.primary,
   transition:
-    "background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
+    "background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
 }));
 
 export interface SideNavItemBaseProps {
@@ -33,13 +38,14 @@ export const SideNavItemBase = React.forwardRef(
 
 const StyledSideNavItem = styled(SideNavItemBase)<{ level?: number }>(({ theme, level }) => ({
   "&:hover": {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: theme.palette.mode === "light" ? "rgba(0, 0, 0, 0.04)" : "rgba(255, 255, 255, 0.08)",
   },
-  padding: "4px",
-  paddingLeft: `${28 + (level ?? 0) * 16}px`,
+  padding: "4px 12px",
+  paddingLeft: `${16 + (level ?? 0) * 16}px`,
   height: "32px",
   display: "flex",
   alignItems: "center",
+  marginBottom: "2px",
 }));
 
 export interface SideNavItemProps extends SideNavItemBaseProps {

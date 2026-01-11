@@ -14,23 +14,30 @@ const RowContainer = styled(Box)<{
   disabled?: boolean;
 }>(({ theme, disabled, transparent, isDropOver, selected }) => {
   let bgColor = "initial";
-  let bgColorHover = theme.palette.action.hover;
+  let bgColorHover = theme.palette.mode === "light" ? "rgba(0, 0, 0, 0.04)" : "rgba(255, 255, 255, 0.04)";
 
   if (selected) {
-    bgColor = alpha(theme.palette.primary.main, 0.18);
-    bgColorHover = bgColor;
+    bgColor =
+      theme.palette.mode === "light"
+        ? alpha(theme.palette.primary.main, 0.12)
+        : alpha(theme.palette.primary.main, 0.24);
+    bgColorHover =
+      theme.palette.mode === "light"
+        ? alpha(theme.palette.primary.main, 0.16)
+        : alpha(theme.palette.primary.main, 0.32);
   }
   return {
-    minHeight: "36px",
+    minHeight: "40px",
     borderBottom: `1px solid ${theme.palette.divider}`,
     display: "flex",
     backgroundColor: bgColor,
+    cursor: "pointer",
     "&:hover": {
       backgroundColor: bgColorHover,
     },
     pointerEvents: disabled ? "none" : "auto",
     opacity: transparent || disabled ? 0.5 : 1,
-    transition: "all 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
+    transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
     transitionProperty: "background-color,opacity,box-shadow",
     boxShadow: isDropOver ? `inset 0 0 0 2px ${theme.palette.primary.light}` : "none",
   };

@@ -16,6 +16,7 @@ import SessionManager from "../../../session";
 import { useContext, useState } from "react";
 import { DrawerPopover } from "./AppDrawer.tsx";
 import { PageVariant, PageVariantContext } from "../NavBarFrame.tsx";
+import SearchBar from "./SearchBar.tsx";
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -103,12 +104,11 @@ const TopAppBar = () => {
           </>
         )}
         {!isMobile && isMainPage && (
-          <Stack direction={"row"} spacing={1} sx={{ height: 42 }}>
-            <NewButton />
-            <NavBarMainActions />
+          <Stack direction={"row"} spacing={1} sx={{ height: 42, flexGrow: 1, justifyContent: "center" }}>
+            <SearchBar />
           </Stack>
         )}
-        <Box sx={{ flexGrow: 1 }} />
+        {(isMobile || !isMainPage) && <Box sx={{ flexGrow: 1 }} />}
         <Stack
           direction={"row"}
           sx={{

@@ -1,4 +1,5 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FileResponse } from "../../../api/explorer.ts";
 import useActionDisplayOpt from "../ContextMenu/useActionDisplayOpt.ts";
@@ -36,9 +37,11 @@ function TabPanel(props: TabPanelProps) {
 const SidebarContent = ({ target, inPhotoViewer, setTarget }: SidebarContentProps) => {
   const { t } = useTranslation();
   const targetDisplayOptions = useActionDisplayOpt(target ? [target] : []);
+  const [tabValue, setTabValue] = useState(0);
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      <Header target={target} />
+      <Header target={target} tabValue={tabValue} onTabChange={setTabValue} />
       {target != null && (
         <>
           <Box
@@ -49,8 +52,8 @@ const SidebarContent = ({ target, inPhotoViewer, setTarget }: SidebarContentProp
               borderColor: "divider",
             }}
           ></Box>
-          <Box sx={{ overflow: "auto" }}>
-            <TabPanel value={0} index={0}>
+          <Box sx={{ overflow: "auto", flexGrow: 1 }}>
+            <TabPanel value={tabValue} index={0}>
               <Details
                 inPhotoViewer={inPhotoViewer}
                 target={target}
@@ -58,8 +61,31 @@ const SidebarContent = ({ target, inPhotoViewer, setTarget }: SidebarContentProp
                 targetDisplayOptions={targetDisplayOptions}
               />
             </TabPanel>
+            <TabPanel value={tabValue} index={1}>
+              <Box sx={{ py: 4, textAlign: "center" }}>
+                <Typography variant="body2" color="text.secondary">
+                  {t("fileManager.noActivityYet")}
+                </Typography>
+              </Box>
+            </TabPanel>
           </Box>
         </>
+      )}
+      {target == null && (
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            p: 4,
+            textAlign: "center",
+          }}
+        >
+          <Typography variant="body2" color="text.secondary">
+            {t("fileManager.selectItemToViewDetails")}
+          </Typography>
+        </Box>
       )}
     </Box>
   );

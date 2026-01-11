@@ -4,6 +4,7 @@ import { useState } from "react";
 import { setDrawerOpen } from "../../../redux/globalStateSlice.ts";
 import { useAppDispatch } from "../../../redux/hooks.ts";
 import Logo from "../../Common/Logo.tsx";
+import NewButton from "../../FileManager/NewButton.tsx";
 
 export const DrawerHeaderContainer = styled("div")(({ theme }) => ({
   display: "flex",
@@ -22,32 +23,37 @@ const DrawerHeader = ({ disabled }: { disabled?: boolean }) => {
   const [showCollapse, setShowCollapse] = useState(false);
 
   return (
-    <DrawerHeaderContainer
-      onMouseEnter={() => setShowCollapse(disabled ? false : true)}
-      onMouseLeave={() => setShowCollapse(false)}
-    >
-      <Box sx={{ width: "100%", pl: 2 }}>
-        <Logo
-          sx={{
-            height: "auto",
-            maxWidth: 160,
-            maxHeight: 35,
-            width: "100%",
-            objectPosition: "left",
-            objectFit: "contain",
-          }}
-        />
-      </Box>
-      {!isMobile && (
-        <Box>
-          <Fade in={showCollapse}>
-            <IconButton onClick={() => dispatch(setDrawerOpen(false))}>
-              <ChevronLeft />
-            </IconButton>
-          </Fade>
+    <>
+      <DrawerHeaderContainer
+        onMouseEnter={() => setShowCollapse(disabled ? false : true)}
+        onMouseLeave={() => setShowCollapse(false)}
+      >
+        <Box sx={{ width: "100%", pl: 2 }}>
+          <Logo
+            sx={{
+              height: "auto",
+              maxWidth: 160,
+              maxHeight: 35,
+              width: "100%",
+              objectPosition: "left",
+              objectFit: "contain",
+            }}
+          />
         </Box>
-      )}
-    </DrawerHeaderContainer>
+        {!isMobile && (
+          <Box>
+            <Fade in={showCollapse}>
+              <IconButton onClick={() => dispatch(setDrawerOpen(false))}>
+                <ChevronLeft />
+              </IconButton>
+            </Fade>
+          </Box>
+        )}
+      </DrawerHeaderContainer>
+      <Box sx={{ px: 2, pb: 2 }}>
+        <NewButton />
+      </Box>
+    </>
   );
 };
 

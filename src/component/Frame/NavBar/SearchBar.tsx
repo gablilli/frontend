@@ -17,14 +17,32 @@ export const KeyIndicator = styled("code")(({ theme }) => ({
 }));
 
 const SearchButton = styled(Button)(({ theme }) => ({
-  backgroundColor: theme.palette.background.default,
-  color: theme.palette.text.disabled,
-  border: `1px solid ${theme.palette.divider}`,
-  pl: 2,
-  pr: 8,
-  " :hover": {
-    border: `1px solid ${theme.palette.primary.main}`,
-    backgroundColor: alpha(theme.palette.primary.main, 0.04),
+  backgroundColor:
+    theme.palette.mode === "light"
+      ? alpha(theme.palette.primary.main, 0.08)
+      : alpha(theme.palette.background.paper, 0.8),
+  color: theme.palette.text.secondary,
+  border: "none",
+  borderRadius: "28px",
+  minWidth: "400px",
+  maxWidth: "720px",
+  height: "48px",
+  justifyContent: "flex-start",
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
+  textTransform: "none",
+  fontWeight: 400,
+  fontSize: "16px",
+  "&:hover": {
+    backgroundColor:
+      theme.palette.mode === "light"
+        ? alpha(theme.palette.primary.main, 0.12)
+        : alpha(theme.palette.background.paper, 1),
+    border: "none",
+  },
+  "& .MuiButton-startIcon": {
+    marginRight: theme.spacing(1.5),
+    color: theme.palette.text.secondary,
   },
 }));
 
@@ -50,28 +68,8 @@ const SearchBar = () => {
   }
 
   return (
-    <SearchButton
-      sx={(theme) => ({
-        backgroundColor: theme.palette.background.default,
-        color: theme.palette.text.disabled,
-        border: `1px solid ${theme.palette.divider}`,
-        pl: 2,
-        pr: 8,
-        height: "100%",
-      })}
-      onClick={() => dispatch(setSearchPopup(true))}
-      variant={"outlined"}
-      startIcon={<Search color={"primary"} />}
-    >
-      <Trans
-        ns={"application"}
-        i18nKey={"navbar.searchPlaceholder"}
-        components={[
-          <KeyIndicator sx={{ mx: 0.5 }}>
-            <Typography variant={"body2"} />
-          </KeyIndicator>,
-        ]}
-      />
+    <SearchButton onClick={() => dispatch(setSearchPopup(true))} variant={"text"} startIcon={<Search />}>
+      {t("navbar.searchInDrive")}
     </SearchButton>
   );
 };
