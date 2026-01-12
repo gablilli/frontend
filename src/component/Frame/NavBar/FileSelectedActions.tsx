@@ -15,7 +15,6 @@ import {
 import { openViewers } from "../../../redux/thunks/viewer.ts";
 import useActionDisplayOpt from "../../FileManager/ContextMenu/useActionDisplayOpt.ts";
 import { FileManagerIndex } from "../../FileManager/FileManager.tsx";
-import { ActionButton, ActionButtonGroup } from "../../FileManager/TopBar/TopActions.tsx";
 import CopyOutlined from "../../Icons/CopyOutlined.tsx";
 import DeleteOutlined from "../../Icons/DeleteOutlined.tsx";
 import Dismiss from "../../Icons/Dismiss.tsx";
@@ -30,17 +29,22 @@ export interface FileSelectedActionsProps {
   targets: FileResponse[];
 }
 
-const StyledActionButton = styled(ActionButton)(({ theme }) => ({
-  // disabled
-  "&.MuiButtonBase-root.Mui-disabled": {
-    color: theme.palette.text.primary,
-    fontWeight: theme.typography.fontWeightRegular,
-    fontSize: theme.typography.body2.fontSize,
+const ActionIconButton = styled(IconButton)(({ theme }) => ({
+  color: theme.palette.text.secondary,
+  "&:hover": {
+    backgroundColor: theme.palette.mode === "light" ? "rgba(0, 0, 0, 0.04)" : "rgba(255, 255, 255, 0.08)",
   },
 }));
 
-const StyledActionButtonGroup = styled(ActionButtonGroup)(({ theme }) => ({
-  backgroundColor: theme.palette.background.default,
+const SelectedCountBox = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: "4px 12px",
+  fontSize: "14px",
+  fontWeight: 500,
+  color: theme.palette.text.primary,
+  whiteSpace: "nowrap",
 }));
 
 const FileSelectedActions = forwardRef(({ targets }: FileSelectedActionsProps, ref: React.Ref<HTMLElement>) => {
@@ -53,7 +57,7 @@ const FileSelectedActions = forwardRef(({ targets }: FileSelectedActionsProps, r
 
   if (isMobile) {
     return (
-      <Stack direction={"row"} spacing={1} sx={{ height: "100%" }}>
+      <Stack direction={"row"} spacing={1} sx={{ height: "100%", alignItems: "center" }}>
         <IconButton
           onClick={() =>
             dispatch(
@@ -69,9 +73,7 @@ const FileSelectedActions = forwardRef(({ targets }: FileSelectedActionsProps, r
           </Badge>
         </IconButton>
         <IconButton onClick={(e) => dispatch(openFileContextMenu(FileManagerIndex.main, targets[0], false, e))}>
-          <Badge badgeContent={targets.length} color={"primary"}>
-            <MoreHorizontal />
-          </Badge>
+          <MoreHorizontal />
         </IconButton>
       </Stack>
     );
@@ -79,84 +81,63 @@ const FileSelectedActions = forwardRef(({ targets }: FileSelectedActionsProps, r
 
   return (
     <Box ref={ref} sx={{ height: "100%" }}>
-      <Stack direction={"row"} spacing={1} sx={{ height: "100%" }}>
-        <StyledActionButtonGroup variant="outlined">
-          <ActionButton
-            onClick={() =>
-              dispatch(
-                clearSelected({
-                  index: FileManagerIndex.main,
-                  value: undefined,
-                }),
-              )
-            }
-          >
-            <Dismiss fontSize={"small"} />
-          </ActionButton>
-          <StyledActionButton disabled sx={{ color: (theme) => theme.palette.text.primary }}>
-            {t("application:navbar.objectsSelected", {
-              num: targets.length,
-            })}
-          </StyledActionButton>
-        </StyledActionButtonGroup>
+      <Stack direction={"row"} spacing={0.5} sx={{ height: "100%", alignItems: "center" }}>
+        <ActionIconButton
+          size="small"
+          onClick={() =>
+            dispatch(
+              clearSelected({
+                index: FileManagerIndex.main,
+                value: undefined,
+              }),
+            )
+          }
+        >
+          <Dismiss fontSize={"small"} />
+        </ActionIconButton>
+        <SelectedCountBox>
+          {t("application:navbar.objectsSelected", {
+            num: targets.length,
+          })}
+        </SelectedCountBox>
         {!isTablet && (
-          <StyledActionButtonGroup variant="outlined">
-            {displayOpt.showOpen && (
-              <Tooltip title={t("application:fileManager.open")}>
-                <ActionButton onClick={() => dispatch(openViewers(0, targets[0]))}>
-                  <Open fontSize={"small"} />
-                </ActionButton>
+          <Stack direction="row" spacing={0.5}>
+            {displayOpt.showShare && (
+              <Tooltip title={t("application:fileManager.share")}>
+                <ActionIconButton size="small" onClick={() => dispatch(openShareDialog(0, targets[0]))}>
+                  <ShareOutlined fontSize={"small"} />
+                </ActionIconButton>
               </Tooltip>
             )}
             {displayOpt.showDownload && (
               <Tooltip title={t("application:fileManager.download")}>
-                <ActionButton onClick={() => dispatch(downloadFiles(0, targets))}>
+                <ActionIconButton size="small" onClick={() => dispatch(downloadFiles(0, targets))}>
                   <Download fontSize={"small"} />
-                </ActionButton>
-              </Tooltip>
-            )}
-            {displayOpt.showCopy && (
-              <Tooltip title={t("application:fileManager.copy")}>
-                <ActionButton onClick={() => dispatch(dialogBasedMoveCopy(0, targets, true))}>
-                  <CopyOutlined fontSize={"small"} />
-                </ActionButton>
+                </ActionIconButton>
               </Tooltip>
             )}
             {displayOpt.showMove && (
               <Tooltip title={t("application:fileManager.move")}>
-                <ActionButton onClick={() => dispatch(dialogBasedMoveCopy(0, targets, false))}>
+                <ActionIconButton size="small" onClick={() => dispatch(dialogBasedMoveCopy(0, targets, false))}>
                   <FolderArrowRightOutlined fontSize={"small"} />
-                </ActionButton>
-              </Tooltip>
-            )}
-            {displayOpt.showRename && (
-              <Tooltip title={t("application:fileManager.rename")}>
-                <ActionButton onClick={() => dispatch(renameFile(0, targets[0]))}>
-                  <RenameOutlined fontSize={"small"} />
-                </ActionButton>
-              </Tooltip>
-            )}
-            {displayOpt.showShare && (
-              <Tooltip title={t("application:fileManager.share")}>
-                <ActionButton onClick={() => dispatch(openShareDialog(0, targets[0]))}>
-                  <ShareOutlined fontSize={"small"} />
-                </ActionButton>
+                </ActionIconButton>
               </Tooltip>
             )}
             {displayOpt.showDelete && (
               <Tooltip title={t("application:fileManager.delete")}>
-                <ActionButton onClick={() => dispatch(deleteFile(0, targets))}>
+                <ActionIconButton size="small" onClick={() => dispatch(deleteFile(0, targets))}>
                   <DeleteOutlined fontSize="small" />
-                </ActionButton>
+                </ActionIconButton>
               </Tooltip>
             )}
-          </StyledActionButtonGroup>
+          </Stack>
         )}
-        <StyledActionButtonGroup variant="outlined">
-          <ActionButton onClick={(e) => dispatch(openFileContextMenu(FileManagerIndex.main, targets[0], false, e))}>
-            <MoreHorizontal fontSize={"small"} />
-          </ActionButton>
-        </StyledActionButtonGroup>
+        <ActionIconButton
+          size="small"
+          onClick={(e) => dispatch(openFileContextMenu(FileManagerIndex.main, targets[0], false, e))}
+        >
+          <MoreHorizontal fontSize={"small"} />
+        </ActionIconButton>
       </Stack>
     </Box>
   );

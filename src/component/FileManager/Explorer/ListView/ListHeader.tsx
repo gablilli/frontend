@@ -91,6 +91,9 @@ const ListHeader = ({ setColumns, commitColumnSetting, columns }: ListHeaderProp
       sx={{
         display: "flex",
         borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+        backgroundColor: (theme) =>
+          theme.palette.mode === "light" ? "rgba(0, 0, 0, 0.02)" : "rgba(255, 255, 255, 0.02)",
+        minHeight: "40px",
       }}
     >
       {columns.map((column, index) => (

@@ -17,17 +17,16 @@ const DrawerContent = () => {
   const pageVariant = useContext(PageVariantContext);
   const isDashboard = pageVariant === PageVariant.dashboard;
   return (
-    <>
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <DrawerHeader />
       <Stack
         direction={"column"}
-        spacing={2}
+        spacing={1}
         ref={scrollRef}
         sx={{
           px: 1,
           pb: 1,
           flexGrow: 1,
-          mx: 1,
           overflow: "auto",
         }}
       >
@@ -35,7 +34,6 @@ const DrawerContent = () => {
           <>
             <TreeNavigation scrollRef={scrollRef} hideWithDrawer={!isMobile} />
             <PageNavigation />
-            {user && <StorageSummary />}
           </>
         )}
         {isDashboard && <AdminPageNavigation />}
@@ -45,7 +43,8 @@ const DrawerContent = () => {
           </Box>
         )}
       </Stack>
-    </>
+      {!isDashboard && user && <StorageSummary />}
+    </Box>
   );
 };
 
@@ -55,7 +54,7 @@ export const DrawerPopover = (props: PopoverProps) => {
   const drawerWidth = useAppSelector((state) => state.globalState.drawerWidth);
   return (
     <Popover {...props}>
-      <Box sx={{ width: "70vw" }}>
+      <Box sx={{ width: "70vw", height: "80vh" }}>
         <DrawerContent />
       </Box>
     </Popover>
